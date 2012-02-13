@@ -6,7 +6,7 @@
 
 
 #define rowPtr(imagePtr, dataType, lineIndex) \
-	    (dataType *)(imagePtr->imageData + lineIndex * imagePtr->widthStep)
+	    (dataType *)(imagePtr->imageData + (lineIndex) * imagePtr->widthStep)
 
 
 int main(int argc, char* argv[])
