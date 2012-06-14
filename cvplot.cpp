@@ -231,27 +231,27 @@ void Figure::DrawAxis(IplImage *output)
 	// y max
 	if ((y_max - y_ref) > 0.05 * (y_max - y_min))
 	{
-		sprintf_s(text, sizeof(text)-1, "%.1f", y_max);
+		snprintf(text, sizeof(text)-1, "%.1f", y_max);
 		cvPutText(output, text, cvPoint(bs / 5, bs - chh / 2), &font, text_color);
 	}
 	// y min
 	if ((y_ref - y_min) > 0.05 * (y_max - y_min))
 	{
-		sprintf_s(text, sizeof(text)-1, "%.1f", y_min);
+		snprintf(text, sizeof(text)-1, "%.1f", y_min);
 		cvPutText(output, text, cvPoint(bs / 5, h - bs + chh), &font, text_color);
 	}
 
 	// x axis
-	sprintf_s(text, sizeof(text)-1, "%.1f", y_ref);
+	snprintf(text, sizeof(text)-1, "%.1f", y_ref);
 	cvPutText(output, text, cvPoint(bs / 5, x_axis_pos + chh / 2), &font, text_color);
 
 	// Write the scale of the x axis
-	sprintf_s(text, sizeof(text)-1, "%.0f", x_max );
+	snprintf(text, sizeof(text)-1, "%.0f", x_max );
 	cvPutText(output, text, cvPoint(w - bs - strlen(text) * chw, x_axis_pos + chh), 
 		      &font, text_color);
 
 	// x min
-	sprintf_s(text, sizeof(text)-1, "%.0f", x_min );
+	snprintf(text, sizeof(text)-1, "%.0f", x_min );
 	cvPutText(output, text, cvPoint(bs, x_axis_pos + chh), 
 		      &font, text_color);
 
@@ -436,6 +436,7 @@ void plot(const string figure_name, const T* p, int count, int step,
 	delete [] data_copy;
 }
 
+
 // add a label to the most recently added curve
 // static method
 void label(string lbl)
@@ -443,5 +444,17 @@ void label(string lbl)
 	pm.Label(lbl);
 }
 
+
+template
+void plot(const string figure_name, const unsigned char* p, int count, int step,
+		  int R, int G, int B);
+
+template
+void plot(const string figure_name, const int* p, int count, int step,
+		  int R, int G, int B);
+
+template
+void plot(const string figure_name, const short* p, int count, int step,
+		  int R, int G, int B);
 
 };
