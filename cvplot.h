@@ -23,6 +23,10 @@
 
 #pragma once
 
+#if WIN32 
+#define snprintf sprintf_s 
+#endif 
+
 #include <vector>
 #include "cv.h"
 #include "highgui.h"
@@ -141,18 +145,6 @@ namespace CvPlot
 	template<typename T>
 	void plot(const string figure_name, const T* p, int count, int step = 1,
 			  int R = -1, int G = -1, int B = -1);
-
-	template
-	void plot(const string figure_name, const unsigned char* p, int count, int step,
-			  int R, int G, int B);
-
-	template
-	void plot(const string figure_name, const int* p, int count, int step,
-			  int R, int G, int B);
-
-	template
-	void plot(const string figure_name, const short* p, int count, int step,
-			  int R, int G, int B);
 
 	void label(string lbl);
 
