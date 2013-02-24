@@ -103,6 +103,7 @@ namespace CvPlot
 
 		string GetFigureName();
 		Series* Add(const Series &s);
+		void Clear();
 		void DrawLabels(IplImage *output, int posx, int posy);
 
 		// show plot window
@@ -145,6 +146,7 @@ namespace CvPlot
 	template<typename T>
 	void plot(const string figure_name, const T* p, int count, int step = 1,
 			  int R = -1, int G = -1, int B = -1);
+	void clear(const string figure_name);
 
 	void label(string lbl);
 

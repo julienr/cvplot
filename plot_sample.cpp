@@ -25,12 +25,6 @@ int main(int argc, char* argv[])
 	// show an image
 	cvShowImage("original", image);
 
-	// specify a line to plot
-	int the_line = 100;
-	unsigned char *pb = rowPtr(image, unsigned char, the_line);
-	int width = image->width;
-
-
 	// plot and label:
 	//
 	// template<typename T>
@@ -49,15 +43,37 @@ int main(int argc, char* argv[])
 	//
 	// label the most recently added curve with lbl.
 	//
-	CvPlot::plot("RGB", pb+0, width, 3);
-	CvPlot::label("B");
-	CvPlot::plot("RGB", pb+1, width, 3, 255, 0, 0);
-	CvPlot::label("G");
-	CvPlot::plot("RGB", pb+2, width, 3, 0, 0, 255);
-	CvPlot::label("R");
+	
+	// specify a line to plot
+	int the_line = 100;
+	
+	int key = -1;
+	while (the_line < image->height)
+	{
+		unsigned char *pb = rowPtr(image, unsigned char, the_line);
+		int width = image->width;
+		
+		CvPlot::plot("RGB", pb+0, width, 3);
+		CvPlot::label("B");
+		CvPlot::plot("RGB", pb+1, width, 3, 255, 0, 0);
+		CvPlot::label("G");
+		CvPlot::plot("RGB", pb+2, width, 3, 0, 0, 255);
+		CvPlot::label("R");
+		
+		key = cvWaitKey(0);
 
-	cvWaitKey(0);
-
+		if (key == 32)
+		{
+			// plot the next line
+			the_line++;
+			// clear previous plots
+			CvPlot::clear("RGB");
+		}
+		else
+		{
+			break;
+		}
+	}
 
 	cvReleaseImage(&image);
 

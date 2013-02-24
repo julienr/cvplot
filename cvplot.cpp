@@ -101,6 +101,11 @@ Series* Figure::Add(const Series &s)
 	return &(plots.back());
 }
 
+void Figure::Clear()
+{
+      plots.clear();
+}
+
 void Figure::Initialize()
 {
 	color_index = 0;
@@ -436,7 +441,16 @@ void plot(const string figure_name, const T* p, int count, int step,
 	delete [] data_copy;
 }
 
-
+// delete all plots on a specified figure
+void clear(const string figure_name)
+{
+	Figure *fig = pm.FindFigure(figure_name);
+	if (fig != NULL)
+	{
+		fig->Clear();	
+	}
+	
+}
 // add a label to the most recently added curve
 // static method
 void label(string lbl)

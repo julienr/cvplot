@@ -13,6 +13,11 @@ DEFINE = \
 
 CC = g++ 
 
+#CFLAGS = `pkg-config opencv --cflags` \
+	-lm -lml -lcvaux -lhighgui -lcv -lcxcore \
+	-O3 \
+	-Wall \
+
 CFLAGS = `pkg-config opencv --cflags` `pkg-config opencv --libs`\
 	-O3 \
 	-Wall \
@@ -31,7 +36,7 @@ all: $(TARGET)
 
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIB)
+	$(CC) -o $@ $^ $(LIB) $(CFLAGS)
 
 clean:
 	rm $(TARGET) $(OBJ)
