@@ -1,3 +1,4 @@
+// vim:tabstop=4:shiftwidth=4:noexpandtab
 // Matlab style plot functions for OpenCV by Changbo (zoccob@gmail).
 
 #include "cvplot.h"
@@ -70,6 +71,28 @@ void Series::SetColor(CvScalar color, bool auto_color)
 	this->auto_color = auto_color;
 }
 
+VLine::VLine(float xpos)
+    : xpos(xpos)
+{
+    color = CV_BLACK;
+    auto_color = true;
+}
+
+void VLine::SetColor(int R, int G, int B, bool auto_color)
+{
+	R = R > 0 ? R : 0;
+	G = G > 0 ? G : 0;
+	B = B > 0 ? B : 0;
+	color = CV_RGB(R, G, B);
+	SetColor(color, auto_color);
+}
+
+void VLine::SetColor(CvScalar color, bool auto_color)
+{
+	this->color = color;
+	this->auto_color = auto_color;
+}
+
 Figure::Figure(const string name)
 {
 	figure_name = name;
@@ -99,6 +122,12 @@ Series* Figure::Add(const Series &s)
 {
 	plots.push_back(s);
 	return &(plots.back());
+}
+
+VLine* Figure::Add(const VLine &l)
+{
+	vlines.push_back(l);
+	return &(vlines.back());
 }
 
 void Figure::Clear()
@@ -294,6 +323,18 @@ void Figure::DrawPlots(IplImage *output)
 		}
 	}
 
+    // draw vertical lines
+    for (vector<VLine>::iterator iter = vlines.begin();
+        iter != vlines.end();
+        ++iter) {
+        if (iter->auto_color) {
+            iter->SetColor(GetAutoColor());
+        }
+        int x = bs + cvRound((iter->xpos - x_min) * x_scale);
+        CvPoint bot_point = cvPoint(x, h - (bs + 0));
+        CvPoint top_point = cvPoint(x, h - (bs + (y_max - y_min)*y_scale));
+        cvLine(output, bot_point, top_point, iter->color, 1, CV_AA);
+    }
 }
 
 void Figure::DrawLabels(IplImage *output, int posx, int posy)
@@ -353,7 +394,7 @@ bool PlotManager::HasFigure(string wnd)
 }
 
 // search a named window, return null if not found.
-Figure* PlotManager::FindFigure(string wnd)
+Figure* PlotManager::FindFigure(const string& wnd)
 {
 	for(vector<Figure>::iterator iter = figure_list.begin();
 		iter != figure_list.end();
@@ -363,6 +404,20 @@ Figure* PlotManager::FindFigure(string wnd)
 			return &(*iter);
 	}
 	return NULL;
+}
+
+// search the named window and create one if none was found
+Figure* PlotManager::FindOrCreateFigure(const string& figure_name) {
+	Figure* active_figure = FindFigure(figure_name);
+	if ( active_figure == NULL)
+	{
+		Figure new_figure(figure_name);
+		figure_list.push_back(new_figure);
+		active_figure = FindFigure(figure_name);
+		if (active_figure == NULL)
+			exit(-1);
+	}
+    return active_figure;
 }
 
 // plot a new curve, if a figure of the specified figure name already exists,
@@ -388,19 +443,22 @@ void PlotManager::Plot(const string figure_name, const float *p, int count, int 
 	if ((R > 0) || (G > 0) || (B > 0))
 		s.SetColor(R, G, B, false);
 
-	// search the named window and create one if none was found
-	active_figure = FindFigure(figure_name);
-	if ( active_figure == NULL)
-	{
-		Figure new_figure(figure_name);
-		figure_list.push_back(new_figure);
-		active_figure = FindFigure(figure_name);
-		if (active_figure == NULL)
-			exit(-1);
-	}
+	active_figure = FindOrCreateFigure(figure_name);
 
 	active_series = active_figure->Add(s);
 	active_figure->Show();
+
+}
+
+void PlotManager::AXVLine(const string figure_name, const float p,
+                          int R, int G, int B) {
+    VLine l(p);
+    if ((R > 0) || (G > 0) || (B > 0))
+        l.SetColor(R, G, B, false);
+
+    active_figure = FindOrCreateFigure(figure_name);
+    active_figure->Add(l);
+    active_figure->Show();
 
 }
 
@@ -441,6 +499,11 @@ void plot(const string figure_name, const T* p, int count, int step,
 	delete [] data_copy;
 }
 
+template<class T>
+void axvline(const string figure_name, T p, int R, int G, int B) {
+	pm.AXVLine(figure_name, p, R, G, B);
+}
+
 // delete all plots on a specified figure
 void clear(const string figure_name)
 {
@@ -470,5 +533,21 @@ void plot(const string figure_name, const int* p, int count, int step,
 template
 void plot(const string figure_name, const short* p, int count, int step,
 		  int R, int G, int B);
+
+
+template
+void axvline(const string figure_name, unsigned char p, int R, int G, int B);
+
+template
+void axvline(const string figure_name, int p, int R, int G, int B);
+
+template
+void axvline(const string figure_name, short p, int R, int G, int B);
+
+template
+void axvline(const string figure_name, float p, int R, int G, int B);
+
+template
+void axvline(const string figure_name, double p, int R, int G, int B);
 
 };

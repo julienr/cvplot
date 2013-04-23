@@ -1,3 +1,4 @@
+// vim:tabstop=4:shiftwidth=4:noexpandtab
 // Matlab style plot functions for OpenCV by Changbo (zoccob@gmail).
 // plot and label:
 //
@@ -63,6 +64,22 @@ namespace CvPlot
 		void SetColor(int R, int G, int B, bool auto_color = true);
 	};
 
+	// Vertical line
+	class VLine
+	{
+	public:
+		float xpos;
+
+		bool auto_color;
+		CvScalar color;
+
+		VLine(float xpos);
+
+		void SetPosition(float xpos);
+		void SetColor(CvScalar color, bool auto_color = true);
+		void SetColor(int R, int G, int B, bool auto_color = true);
+	};
+
 	// a figure comprises of several curves
 	class Figure
 	{
@@ -80,6 +97,7 @@ namespace CvPlot
 
 		// several curves
 		vector<Series> plots;
+		vector<VLine> vlines;
 
 		// manual or automatic range
 		bool custom_range_y;
@@ -103,6 +121,7 @@ namespace CvPlot
 
 		string GetFigureName();
 		Series* Add(const Series &s);
+		VLine* Add(const VLine &l);
 		void Clear();
 		void DrawLabels(IplImage *output, int posx, int posy);
 
@@ -132,12 +151,16 @@ namespace CvPlot
 
 		// now useless
 		bool HasFigure(string wnd);
-		Figure* FindFigure(string wnd);
+		Figure* FindFigure(const string& wnd);
+		Figure* FindOrCreateFigure(const string& wnd);
 
 		void Plot(const string figure_name, const float* p, int count, int step,
 				  int R, int G, int B);
 
 		void Label(string lbl);
+
+		void AXVLine(const string figure_name, const float p, int R, int G,
+					 int B);
 
 	};
 
@@ -146,6 +169,11 @@ namespace CvPlot
 	template<typename T>
 	void plot(const string figure_name, const T* p, int count, int step = 1,
 			  int R = -1, int G = -1, int B = -1);
+
+	template<typename T>
+	void axvline(const string figure_name, T p, int R = -1, int G = -1,
+				int B = -1);
+
 	void clear(const string figure_name);
 
 	void label(string lbl);

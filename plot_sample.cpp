@@ -59,6 +59,9 @@ int main(int argc, char* argv[])
 		CvPlot::label("G");
 		CvPlot::plot("RGB", pb+2, width, 3, 0, 0, 255);
 		CvPlot::label("R");
+
+    CvPlot::axvline("RGB", 0., 0, 255, 0);
+    CvPlot::axvline("RGB", 500, 0, 255, 0);
 		
 		key = cvWaitKey(0);
 
