@@ -132,7 +132,8 @@ VLine* Figure::Add(const VLine &l)
 
 void Figure::Clear()
 {
-      plots.clear();
+	plots.clear();
+	vlines.clear();
 }
 
 void Figure::Initialize()
