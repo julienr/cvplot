@@ -443,7 +443,16 @@ void PlotManager::Plot(const string figure_name, const float *p, int count, int 
 	if ((R > 0) || (G > 0) || (B > 0))
 		s.SetColor(R, G, B, false);
 
-	active_figure = FindOrCreateFigure(figure_name);
+	// search the named window and create one if none was found
+	active_figure = FindFigure(figure_name);
+	if ( active_figure == NULL)
+	{
+		Figure new_figure(figure_name);
+		figure_list.push_back(new_figure);
+		active_figure = FindFigure(figure_name);
+		if (active_figure == NULL)
+			exit(-1);
+	}
 
 	active_series = active_figure->Add(s);
 	active_figure->Show();
@@ -532,6 +541,14 @@ void plot(const string figure_name, const int* p, int count, int step,
 
 template
 void plot(const string figure_name, const short* p, int count, int step,
+		  int R, int G, int B);
+
+template
+void plot(const string figure_name, const double* p, int count, int step,
+		  int R, int G, int B);
+
+template
+void plot(const string figure_name, const float* p, int count, int step,
 		  int R, int G, int B);
 
 
