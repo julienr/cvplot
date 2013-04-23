@@ -471,4 +471,12 @@ template
 void plot(const string figure_name, const short* p, int count, int step,
 		  int R, int G, int B);
 
+template
+void plot(const string figure_name, const double* p, int count, int step,
+		  int R, int G, int B);
+
+template
+void plot(const string figure_name, const float* p, int count, int step,
+		  int R, int G, int B);
+
 };
