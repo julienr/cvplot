@@ -146,8 +146,10 @@ void Figure::Initialize()
 	if (figure_size.height <= border_size * 2 + 200)
 		figure_size.height = border_size * 2 + 200;
 
-	y_max = FLT_MIN;
-	y_min = FLT_MAX;
+	if (!custom_range_y) {
+		y_max = FLT_MIN;
+		y_min = FLT_MAX;
+	}
 
 	x_max = 0;
 	x_min = 0;
@@ -158,13 +160,15 @@ void Figure::Initialize()
 		iter++)
 	{
 		float *p = iter->data;
-		for (int i=0; i < iter->count; i++)
-		{
-			float v = p[i];
-			if (v < y_min)
-				y_min = v;
-			if (v > y_max)
-				y_max = v;
+		if (!custom_range_y) {
+			for (int i=0; i < iter->count; i++)
+			{
+				float v = p[i];
+				if (v < y_min)
+					y_min = v;
+				if (v > y_max)
+					y_max = v;
+			}
 		}
 
 		if (x_max < iter->count)
@@ -367,6 +371,12 @@ void Figure::DrawLabels(IplImage *output, int posx, int posy)
 
 }
 
+void Figure::SetYRange(float ymin, float ymax) {
+	custom_range_y = true;
+	y_min = ymin;
+	y_max = ymax;
+}
+
 // whole process of draw a figure.
 void Figure::Show()
 {
@@ -386,7 +396,6 @@ void Figure::Show()
 	cvReleaseImage(&output);
 
 }
-
 
 
 bool PlotManager::HasFigure(string wnd)
@@ -472,6 +481,13 @@ void PlotManager::AXVLine(const string figure_name, const float p,
 
 }
 
+void PlotManager::SetYRange(const string figure_name,
+					 		float ymin, float ymax) {
+	active_figure = FindOrCreateFigure(figure_name);
+	active_figure->SetYRange(ymin, ymax);
+	active_figure->Show();
+}
+
 // add a label to the most recently added curve
 void PlotManager::Label(string lbl)
 {
@@ -529,6 +545,10 @@ void clear(const string figure_name)
 void label(string lbl)
 {
 	pm.Label(lbl);
+}
+
+void ylim(const string figure_name, float ymin, float ymax) {
+	pm.SetYRange(figure_name, ymin, ymax);
 }
 
 

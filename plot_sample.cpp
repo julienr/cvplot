@@ -60,6 +60,8 @@ int main(int argc, char* argv[])
 		CvPlot::plot("RGB", pb+2, width, 3, 0, 0, 255);
 		CvPlot::label("R");
 
+    //CvPlot::ylim("RGB", 0, 100);
+
     CvPlot::axvline("RGB", 0., 0, 255, 0);
     CvPlot::axvline("RGB", 500, 0, 255, 0);
 		

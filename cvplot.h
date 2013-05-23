@@ -125,6 +125,8 @@ namespace CvPlot
 		void Clear();
 		void DrawLabels(IplImage *output, int posx, int posy);
 
+		void SetYRange(float ymin, float ymax);
+
 		// show plot window
 		void Show();
 
@@ -159,6 +161,8 @@ namespace CvPlot
 
 		void Label(string lbl);
 
+		void SetYRange(const string figure_name, float ymin, float ymax);
+
 		void AXVLine(const string figure_name, const float p, int R, int G,
 					 int B);
 
@@ -173,6 +177,9 @@ namespace CvPlot
 	template<typename T>
 	void axvline(const string figure_name, T p, int R = -1, int G = -1,
 				int B = -1);
+
+	void ylim(const string figure_name, float ymin, float ymax);
+
 
 	void clear(const string figure_name);
 

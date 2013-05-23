@@ -19,6 +19,7 @@ CC = g++
 	-Wall \
 
 CFLAGS = `pkg-config opencv --cflags` `pkg-config opencv --libs`\
+  -lm \
 	-O3 \
 	-Wall \
 
